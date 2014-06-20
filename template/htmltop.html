@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<link rel="shortcut icon" href="/static/images/l.jpg"/>
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="/static/css/bootstrap.css">
+
+
+		<script type="text/javascript">
+			function passcheck() {
+				var x = document.forms["registerform"]["password"].value;
+				var y = document.forms["registerform"]["confpassword"].value;
+				if(x!==y)
+				{
+					alert('Passwords do not match');
+					return false;
+				}
+					return true;
+			}
+			window.onload = function(){
+				var t="{{ text }}";
+				if(t)
+					alert(t);
+				
+			}
+		</script>
+	<title>LIBRARY</title>
+	<body >
+		<div class="row">
+			<div class="col-lg-6">
+				<h1>Library Manager</h1>
+			</div>
+			<div class="col-lg-6">
+				<div class="col-lg-6"></div>
+				<div class="col-lg-6">
+
+
+					
+		</div>
+	</div>
+</div>
+
+		<ul class="nav nav-tabs" >
+			
+
+			<li ><a href="/">Home</a></li>
+			{% if user.is_staff %}
+			<li><a href="/book/add">Add Book</a></li>
+			{% endif %}
+			<li><a href="/book/searchbook">Search Books</a></li>
+			{% if user.is_authenticated %}
+			<li><a href="/profile">Profile</a></li>
+			<li><a href="/logout">Logout</a></li>
+			{% else %}
+			<li><a href="/register">Register</a></li>
+			<li><a href="/login">Login</a></li>
+			{% endif %}
+		</ul>

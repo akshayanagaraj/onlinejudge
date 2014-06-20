@@ -1,0 +1,23 @@
+{% include "htmltop.html" %}
+	NAME: {{ u.first_name }}<br>
+	GENDER: {{ u.gender }}<br>
+	CONTACT = {{ u.contact }}<br>
+	EMAIL = {{ u.email }}<br>
+	BOOKS IN HAND: {{ u.books_in_hand}}<br>
+	<a href="/editprofile">Edit Profile</a>
+	<table border="1">
+		<tr>
+			<th>Book name</th>
+			<th>Due date</th>
+		</tr>
+		{% for i in x %}
+		<tr>
+			<td>{{ i.book.name}}</td>
+			<td>{{ i.due_date }}</td>
+			<td><a href="/return/{{ i.book.bid }}">Return</a></td>
+			<td><a href="/extend/{{ i.lid }}">Extend</a></td>
+		</tr>
+		{% endfor %}
+	</table>
+</body>
+<html>

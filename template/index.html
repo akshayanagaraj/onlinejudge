@@ -1,0 +1,8 @@
+{% include "htmltop.html" %}
+{% if not user.is_authenticated %}
+<h3>Welcome to the Library Manager</h4>
+{% else %}
+<h3>Welcome {{ user.first_name }}</h3>
+{% endif %}
+</body>
+</html>

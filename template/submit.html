@@ -1,0 +1,18 @@
+{% include "htmltop.html" %}
+<form action="/submit/" method="post">
+	{% csrf_token %}
+	<input type="text" name="problemid" placeholder="problem code"><br><br>
+	<textarea rows="30" cols="80" name="code" placeholder="Your code here"></textarea><br><br>
+	<select name="language">
+		<option value="c">C</option>
+		<option value="cpp">C++</option>
+		<option value="java">Java</option>
+		<option value="py">Python</option>
+		<option value="rb">Ruby</option>
+	</select><br><br>
+	<input type="submit" value="Submit"><br>
+	
+</form>
+
+{% include "htmlbottom.html" %}
+

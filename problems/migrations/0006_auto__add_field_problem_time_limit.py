@@ -8,18 +8,15 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'OjUser'
-        db.create_table(u'users_ojuser', (
-            (u'user_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['auth.User'], unique=True, primary_key=True)),
-            ('gender', self.gf('django.db.models.fields.CharField')(max_length=3, null=True, blank=True)),
-            ('reg_no', self.gf('django.db.models.fields.CharField')(max_length=23, null=True, blank=True)),
-        ))
-        db.send_create_signal(u'users', ['OjUser'])
+        # Adding field 'Problem.time_limit'
+        db.add_column(u'problems_problem', 'time_limit',
+                      self.gf('django.db.models.fields.FloatField')(default=0),
+                      keep_default=False)
 
 
     def backwards(self, orm):
-        # Deleting model 'OjUser'
-        db.delete_table(u'users_ojuser')
+        # Deleting field 'Problem.time_limit'
+        db.delete_column(u'problems_problem', 'time_limit')
 
 
     models = {
@@ -59,6 +56,41 @@ class Migration(SchemaMigration):
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
+        u'problems.detail': {
+            'Meta': {'object_name': 'Detail'},
+            'acc': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
+            'accuracy': ('django.db.models.fields.FloatField', [], {'default': '0.0'}),
+            'ce': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'pid': ('django.db.models.fields.CharField', [], {'max_length': '10'}),
+            'rte': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
+            'total': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
+            'wa': ('django.db.models.fields.IntegerField', [], {'default': '0'})
+        },
+        u'problems.problem': {
+            'Meta': {'object_name': 'Problem'},
+            'description': ('django.db.models.fields.TextField', [], {'max_length': '10000'}),
+            'details': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['problems.Detail']"}),
+            'explanation': ('django.db.models.fields.TextField', [], {'max_length': '10000'}),
+            'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'pid': ('django.db.models.fields.CharField', [], {'max_length': '10', 'primary_key': 'True'}),
+            'sample_input': ('django.db.models.fields.TextField', [], {'max_length': '10000'}),
+            'sample_output': ('django.db.models.fields.TextField', [], {'max_length': '10000'}),
+            'testfiles': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
+            'time_limit': ('django.db.models.fields.FloatField', [], {'default': '0'})
+        },
+        u'problems.submission': {
+            'Meta': {'object_name': 'Submission'},
+            'code': ('django.db.models.fields.files.FileField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
+            'extime': ('django.db.models.fields.FloatField', [], {'default': '0'}),
+            'language': ('django.db.models.fields.CharField', [], {'max_length': '10'}),
+            'prob': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['problems.Problem']"}),
+            'sid': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'status': ('django.db.models.fields.CharField', [], {'default': "'waiting'", 'max_length': '20'}),
+            'subtime': ('django.db.models.fields.DateTimeField', [], {}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['users.OjUser']"})
+        },
         u'users.ojuser': {
             'Meta': {'object_name': 'OjUser', '_ormbases': [u'auth.User']},
             'gender': ('django.db.models.fields.CharField', [], {'max_length': '3', 'null': 'True', 'blank': 'True'}),
@@ -67,4 +99,4 @@ class Migration(SchemaMigration):
         }
     }
 
-    complete_apps = ['users']
+    complete_apps = ['problems']

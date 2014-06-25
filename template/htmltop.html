@@ -24,15 +24,16 @@
 				
 			}
 		</script>
-	<title>LIBRARY</title>
+	<title>Judge</title>
 	<body >
 		<div class="row">
 			<div class="col-lg-6">
-				<h1>Library Manager</h1>
+				<h1>Judge</h1>
 			</div>
 			<div class="col-lg-6">
 				<div class="col-lg-6"></div>
 				<div class="col-lg-6">
+					
 
 
 					
@@ -44,12 +45,9 @@
 			
 
 			<li ><a href="/">Home</a></li>
-			{% if user.is_staff %}
-			<li><a href="/book/add">Add Book</a></li>
-			{% endif %}
-			<li><a href="/book/searchbook">Search Books</a></li>
 			{% if user.is_authenticated %}
-			<li><a href="/profile">Profile</a></li>
+			<li><a href="/problems">Problems</a></li>
+			<li><a href="/ranks">Ranks</a></li>
 			<li><a href="/logout">Logout</a></li>
 			{% else %}
 			<li><a href="/register">Register</a></li>

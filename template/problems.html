@@ -1,0 +1,21 @@
+{% include "htmltop.html" %}
+<table border="1">
+	<tr>
+		<th>PID</th>
+		<th>Name</th>
+		<th>Total Submissions</th>
+		<th>Accuracy</th>
+	
+	</tr>
+	{% for i in p %}
+	<tr>
+		<td>{{ i.pid }}</td>
+		<td><a href="/problems/{{ i.pid }}/">{{ i.name }}</a></td>
+		<td>{{ i.details.total}}</td>
+		<td>{{ i.details.accuracy}}</td>
+	</tr>
+	
+	{% endfor %}
+</table>
+{% include "htmlbottom.html" %}
+

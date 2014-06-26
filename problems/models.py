@@ -30,7 +30,7 @@ class Problem(models.Model):
 
 class Submission(models.Model):
 	def __unicode__(self):
-		return self.sid
+		return str(self.sid)
 	sid= models.AutoField(primary_key=True)
 	prob = models.ForeignKey(Problem)
 	code = models.FileField(upload_to='submissions',blank=True,null=True)

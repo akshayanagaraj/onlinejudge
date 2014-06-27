@@ -13,6 +13,9 @@ class Migration(SchemaMigration):
             (u'user_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['auth.User'], unique=True, primary_key=True)),
             ('gender', self.gf('django.db.models.fields.CharField')(max_length=3, null=True, blank=True)),
             ('reg_no', self.gf('django.db.models.fields.CharField')(max_length=23, null=True, blank=True)),
+            ('tot_sub', self.gf('django.db.models.fields.IntegerField')(default=0)),
+            ('succ_sub', self.gf('django.db.models.fields.IntegerField')(default=0)),
+            ('points', self.gf('django.db.models.fields.FloatField')(default=0)),
         ))
         db.send_create_signal(u'users', ['OjUser'])
 
@@ -62,7 +65,10 @@ class Migration(SchemaMigration):
         u'users.ojuser': {
             'Meta': {'object_name': 'OjUser', '_ormbases': [u'auth.User']},
             'gender': ('django.db.models.fields.CharField', [], {'max_length': '3', 'null': 'True', 'blank': 'True'}),
+            'points': ('django.db.models.fields.FloatField', [], {'default': '0'}),
             'reg_no': ('django.db.models.fields.CharField', [], {'max_length': '23', 'null': 'True', 'blank': 'True'}),
+            'succ_sub': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
+            'tot_sub': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             u'user_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['auth.User']", 'unique': 'True', 'primary_key': 'True'})
         }
     }

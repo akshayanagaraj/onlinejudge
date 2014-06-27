@@ -6,4 +6,5 @@ urlpatterns = patterns('',
                        url(r'^problems/(?P<pid>\w+)/?$',views.problem),
                        url(r'^submit/?$',views.submission),
                        url(r'^submissions/(?P<sid>\d+)/?$',views.submit),
+                       url(r'^submissionstatus/(?P<sid>\d+)/?$',views.substatus),
                        )

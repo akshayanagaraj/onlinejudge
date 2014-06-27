@@ -1,16 +1,43 @@
 {% include "htmltop.html" %}
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script type="text/javascript">
-	window.onload = function(){
-		document.getElementById("language_field").value="{{ s.language }}";
-	}
-</script>
-{% ifequal s.status "Accepted" %}
-<div align="center">
-	<img  src="/media/images/acc.jpeg">
-</div>
-{% endifequal %}
+window.onload = function(){
+	document.getElementById("language_field").value="{{ s.language }}";
+	function myPeriodicMethod() {
+		console.log('calling ajax');
+		$.ajax({
+url: "/submissionstatus/{{ s.sid }}", 
+success: function(data) {
+	var parseData = JSON.parse(data);
+	console.log(parseData);
+	$('#status').html(parseData.status);
+},
+complete: function() {
+// schedule the next request *only* when the current one is complete:
+if($('#status').val() == 'waiting' || $('#status').val()=='Processing')
+{
 
-<p align="center">{{ s.status }}</p>
+console.log('Hello');
+setTimeout(myPeriodicMethod, 1000);
+}
+else
+{
+}
+
+}
+});
+}
+
+// schedule the first invocation:
+setTimeout(myPeriodicMethod, 1000);
+
+
+}
+</script>
+<div align="center" id="imagediv">
+</div>
+
+<p align="center" id="status">{{ s.status }}</p>
 <form action = "/submit/" method="post">
 	{% csrf_token %}
 	<input type="text" name="problemid" value="{{ s.prob.pid }}"><br><br>

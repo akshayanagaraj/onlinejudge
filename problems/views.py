@@ -1,10 +1,11 @@
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect,HttpResponse
 from problems.models import Problem,Submission
 from django.core.files.base import ContentFile
 from django.contrib.auth.decorators import login_required
 from users.models import OjUser
 import datetime
+import json
 
 
 
@@ -51,6 +52,20 @@ def submit(request,sid):
     code = s.code.read()
     return render(request,'submission.html',{'s':s,'code':code})
 
+@login_required(login_url="/login")
+def substatus(request,sid):
+    s = Submission.objects.filter(sid=sid)
+    if not sid:
+        return HttpResponseRedirect('/problems')
+    s = s[0]
+    u = OjUser.objects.get(username=request.user.username)
+    if request.user.username != u.username:
+        return HttpResponseRedirect('/problems')
+    da = {
+            'status':s.status,
+            }
+    da = json.dumps(da)
+    return HttpResponse(da)
 
 
     

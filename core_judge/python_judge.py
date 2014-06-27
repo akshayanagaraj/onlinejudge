@@ -80,8 +80,11 @@ while True:
                     os.remove('err.txt')
                     break
 	        out_file = out_files + a.prob.pid + str(i) + '.txt'
+                out_file_p = open(out_file,'r')
+                out_template = out_file_p.read()
+                sub_out = open('out.txt','r').read()
         
-                if filecmp.cmp('out.txt',out_file):
+                if  out_template == sub_out:
                     os.remove('out.txt')
                     os.remove('err.txt')
                     continue
@@ -112,8 +115,6 @@ while True:
                 a.user.save()
                 a.status = "Accepted"
                 a.save()
-                os.remove('out.txt')
-                os.remove('err.txt')
                 continue
 
        

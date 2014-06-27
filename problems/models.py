@@ -6,6 +6,7 @@ class Detail(models.Model):
 		return self.pid
 	pid = models.CharField(max_length=10)
 	total = models.IntegerField(default=0)
+        tle = models.IntegerField(default=0)
 	acc = models.IntegerField(default=0)
 	wa = models.IntegerField(default=0)
 	ce = models.IntegerField(default=0)

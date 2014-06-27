@@ -1,14 +1,15 @@
 {% include "htmltop.html" %}
 <h1 align="center">{{ p.name }}</h1>
 <h3 align="center">{{ p.pid }}</h3>
-{{ p.description| safe }}<br><br>
+{{ p.description| linebreaks }}<br><br>
 <strong>Sample Input</strong><br><br>
-{{ p.sample_input | safe }}<br><br>
+{{ p.sample_input | linebreaks }}<br><br>
 <strong>Sample Output</strong><br><br>
-{{ p.sample_output | safe }}<br><br>
+{{ p.sample_output | linebreaks }}<br><br>
 <strong>Explanation</strong><br><br>
-{{ p.explanation  | safe }}<br><br>
+{{ p.explanation  | linebreaks }}<br><br>
 
+{% if user.is_authenticated %}
 <form action="/submit/" method="post">
 	{% csrf_token %}
 	<input type="text" name="problemid" value="{{ p.pid }}"><br><br>
@@ -23,4 +24,5 @@
 	<input type="submit" value="Submit"><br>
 	
 </form>
+{% endif %}
 {% include "htmlbottom.html" %}

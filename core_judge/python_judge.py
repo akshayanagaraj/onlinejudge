@@ -20,10 +20,13 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'judge.settings'
 
 from problems.models import Submission
 
-sub_list = Submission.objects.filter(status='waiting',language='py')
+while True:
+    sub_list = Submission.objects.filter(status='waiting',language='py')
+    if not sub_list:
+        time.sleep(1)
+        continue
 
-
-for a in sub_list: 
+    for a in sub_list: 
 	a.status = 'Processing'
 	a.save()
 
@@ -34,10 +37,12 @@ for a in sub_list:
                 i += 1
 
 		in_file = in_files + a.prob.pid + str(i) + '.txt'
+                print in_file
+                print cmd 
 		inf = open(in_file,'r')
-		outf = open('out.txt','w')
-		errf = open('err.txt','w')
-		p = subprocess.Popen([cmd],stdin=inf,stdout=outf,stderr=errf)
+		outf = open('out.txt','w+')
+		errf = open('err.txt','w+')
+		p = subprocess.Popen([cmd],stdin=inf,stdout=outf,stderr=errf,shell=True)
                 time_taken = 0.0
        	        while p.poll() is None:
 		    time.sleep(0.1)
@@ -46,11 +51,12 @@ for a in sub_list:
 		    	os.kill(p.pid,signal.SIGKILL)
 			os.waitpid(-1,os.WNOHANG)
 			os.remove('out.txt')
+                        os.remove('err.txt')
 			a.status = "Time Limit Exceeded"
 			a.save()
 			a.prob.details.total += 1
 			a.prob.details.tle += 1
-			a.prob.details.accuracy = a.prob.acc/a.prob.total
+			a.prob.details.accuracy = a.prob.details.acc/a.prob.details.total
 			a.prob.details.save()
 			a.user.tot_sub += 1
 			a.user.save()
@@ -58,7 +64,7 @@ for a in sub_list:
 
 	        if a.status == "Time Limit Exceeded":
                     os.remove('out.txt')
-                    os.remove('error.txt')
+                    os.remove('err.txt')
 	            break
 	        errors = errf.read()
 	        if errors:
@@ -71,17 +77,17 @@ for a in sub_list:
 		    a.user.tot_sub += 1
 		    a.user.save()
                     os.remove('out.txt')
-                    os.remove('error.txt')
+                    os.remove('err.txt')
                     break
 	        out_file = out_files + a.prob.pid + str(i) + '.txt'
         
                 if filecmp.cmp('out.txt',out_file):
                     os.remove('out.txt')
-                    os.remove('error.txt')
+                    os.remove('err.txt')
                     continue
                 else:
                     os.remove('out.txt')
-                    os.remove('error.txt')
+                    os.remove('err.txt')
                     a.status = "Wrong Answer"
                     a.save()
                     a.prob.details.total += 1
@@ -106,6 +112,8 @@ for a in sub_list:
                 a.user.save()
                 a.status = "Accepted"
                 a.save()
+                os.remove('out.txt')
+                os.remove('err.txt')
                 continue
 
        

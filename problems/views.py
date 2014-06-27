@@ -40,6 +40,18 @@ def submission(request):
     else:
         return render(request,'submit.html')
 
+def submit(request,sid):
+    s = Submission.objects.filter(sid = sid)
+    if not s:
+        return HttpResponseRedirect('/problems')
+    u = OjUser.objects.get(username = request.user.username)
+    s = s[0]
+    if s.user != u:
+        return HttpResponseRedirect('/problems')
+    code = s.code.read()
+    return render(request,'submission.html',{'s':s,'code':code})
+
+
 
     
     

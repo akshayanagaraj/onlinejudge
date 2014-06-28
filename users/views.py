@@ -25,7 +25,7 @@ def register(request):
 			if x:
 				return HttpResponse('Email exists')
 			l = OjUser.objects.create(
-				username = email,
+				username = reg_no,
 				first_name = nm,
 				email = email,
 				gender = gender,
@@ -54,7 +54,14 @@ def login_view(request):
                 password=pwd
             )
             if user is not None and user.is_active:
+                u = OjUser.objects.get(username=user.username)
+                if u.is_loggedin:
+                    text = 'This user is already logged in'
+                    return render(request,'register.html',{'sub':sub,'url':url,'form':LoginForm(),'text':text})
+
                 login(request,user)
+                user.is_loggedin = True
+                user.save()
                 return HttpResponseRedirect('/')
             else:
                 text='Email and password do not match'
@@ -66,7 +73,11 @@ def login_view(request):
 		   return render(request,'register.html',{'url':url,'form':LoginForm(),'sub':sub})
                 
 def logoff(request):
+        u = OjUser.objects.get(username = request.user.username)
+        u.is_loggedin = False
+        u.save()
 	logout(request)
+
 	return HttpResponseRedirect('/')
 
 @login_required(login_url='/login/')

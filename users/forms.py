@@ -11,7 +11,7 @@ class RegisterForm(forms.Form):
 	confpassword =forms.CharField(max_length=32,widget=forms.PasswordInput())
         
 class LoginForm(forms.Form):
-        username = forms.EmailField()
+        username = forms.CharField(max_length=22)
         password = forms.CharField(max_length=32,widget=forms.PasswordInput())
 
 class ProfileForm(forms.Form):
@@ -19,7 +19,6 @@ class ProfileForm(forms.Form):
 				('F','F'))
 	name = forms.CharField(max_length=100)
 	gender = forms.ChoiceField(choices=Choices)
-	reg_no = forms.CharField(max_length=22)
 	oldpassword = forms.CharField(max_length=32,widget=forms.PasswordInput(),required=False)
 	password =forms.CharField(max_length=32,widget=forms.PasswordInput(),required=False)
 	confpassword =forms.CharField(max_length=32,widget=forms.PasswordInput(),required=False)

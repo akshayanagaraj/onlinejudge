@@ -56,15 +56,13 @@ while True:
 			a.save()
 			a.prob.details.total += 1
 			a.prob.details.tle += 1
-			a.prob.details.accuracy = a.prob.details.acc/a.prob.details.total
+			a.prob.details.accuracy = round(float(a.prob.details.acc)/a.prob.details.total,3)
 			a.prob.details.save()
 			a.user.tot_sub += 1
 			a.user.save()
 			break
 
 	        if a.status == "Time Limit Exceeded":
-                    os.remove('out.txt')
-                    os.remove('err.txt')
 	            break
 	        errors = errf.read()
 	        if errors:
@@ -72,7 +70,7 @@ while True:
 		    a.save()
 		    a.prob.details.total += 1
 		    a.prob.details.rte += 1
-		    a.prob.details.accuracy = a.prob.details.acc/a.prob.details.total
+		    a.prob.details.accuracy = round(float(a.prob.details.acc)/a.prob.details.total,3)
 		    a.prob.details.save()
 		    a.user.tot_sub += 1
 		    a.user.save()
@@ -95,22 +93,22 @@ while True:
                     a.save()
                     a.prob.details.total += 1
                     a.prob.details.wa += 1
-                    a.prob.details.accuracy = a.prob.details.acc/a.prob.details.total
-                    a.prob.save()
+                    a.prob.details.accuracy = round(float(a.prob.details.acc)/a.prob.details.total,3)
+                    a.prob.details.save()
                     a.user.tot_sub += 1
                     a.user.save()
                     break
         if i == a.prob.testfiles:
                 a.prob.details.total += 1
                 a.prob.details.acc += 1
-                a.prob.details.accuracy = a.prob.details.acc/a.prob.details.total
+                a.prob.details.accuracy = round(float(a.prob.details.acc)/a.prob.details.total,3)
                 a.prob.details.save()
-                x = Submission.objects.filter(user = a.user,status = "Accepted")
+                x = Submission.objects.filter(user = a.user,status = "Accepted",prob=a.prob)
+                print x
                 if not x:
                     a.user.points += 1
 
                 a.user.tot_sub += 1
-                a.user.points += 1
                 a.user.succ_sub += 1
                 a.user.save()
                 a.status = "Accepted"

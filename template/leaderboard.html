@@ -1,0 +1,18 @@
+{% include "htmltop.html" %}
+<table border="1">
+	<tr>
+		<th>Rank</th>
+		<th>Name</th>
+		<th>Points</th>
+		<th>Time</th>
+	</tr>
+	{% for i in u %}
+	<tr>
+		<td>{{ i.rank }}</td>
+		<td>{{ i.first_name}}</td>
+		<td>{{ i.points}}</td>
+		<td>{{ i.ex_time}}</td>
+	</tr>
+	{% endfor %}
+</table>
+{% include "htmlbottom.html" %}

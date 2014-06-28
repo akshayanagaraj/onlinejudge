@@ -13,8 +13,10 @@ success: function(data) {
 	$('#status').html(parseData.status);
 },
 complete: function() {
+var data = document.getElementById('status').innerHTML;
+console.log(data);
 // schedule the next request *only* when the current one is complete:
-if($('#status').val() == 'waiting' || $('#status').val()=='Processing')
+if(data == 'waiting' || data=='Processing')
 {
 
 console.log('Hello');

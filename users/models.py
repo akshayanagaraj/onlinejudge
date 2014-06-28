@@ -7,6 +7,9 @@ class OjUser(User):
 	tot_sub = models.IntegerField(default=0)
 	succ_sub = models.IntegerField(default=0)
 	points = models.FloatField(default=0)
+        rank = models.IntegerField(default=1)
+        is_loggedin = models.BooleanField(default=False)
+        ex_time = models.FloatField(default=0.0)
 	
 
 

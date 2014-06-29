@@ -1,6 +1,9 @@
 {% include "htmltop.html" %}
 <h1 align="center">{{ p.name }}</h1>
 <h3 align="center">{{ p.pid }}</h3>
+<div class="row">
+	<div class="col-md-2"></div>
+	<div class="col-md-8">
 {{ p.description| linebreaks }}<br><br>
 <strong>Sample Input</strong><br><br>
 {{ p.sample_input | linebreaks }}<br><br>
@@ -8,12 +11,15 @@
 {{ p.sample_output | linebreaks }}<br><br>
 <strong>Explanation</strong><br><br>
 {{ p.explanation  | linebreaks }}<br><br>
+</div>
+<div class="col-md-2"></div>
+</div>
 
 {% if user.is_authenticated %}
-<form action="/submit/" method="post">
+<center><form action="/submit/" method="post" >
 	{% csrf_token %}
-	<input type="text" name="problemid" value="{{ p.pid }}"><br><br>
 	<textarea rows="30" cols="80" name="code" placeholder="Your code here"></textarea><br><br>
+	<input type="text" name="problemid" value="{{ p.pid }}">
 	<select name="language">
 		<option value="c">C</option>
 		<option value="cpp">C++</option>
@@ -23,6 +29,6 @@
 	</select><br><br>
 	<input type="submit" value="Submit"><br>
 	
-</form>
+</form></center>
 {% endif %}
 {% include "htmlbottom.html" %}

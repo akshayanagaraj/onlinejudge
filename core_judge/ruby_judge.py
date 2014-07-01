@@ -50,7 +50,7 @@ while True:
 			os.remove('out.txt')
                         os.remove('err.txt')
 			a.status = "Time Limit Exceeded"
-                        a.extime += .5
+                        a.extime += .2
 			a.save()
 			a.prob.details.total += 1
 			a.prob.details.tle += 1
@@ -64,7 +64,7 @@ while True:
 	            break
 	        if p.returncode:
 		    a.status = "Run Time Error"
-                    a.extime += .5
+                    a.extime += .2
 		    a.save()
 		    a.prob.details.total += 1
 		    a.prob.details.rte += 1
@@ -88,7 +88,7 @@ while True:
                     os.remove('out.txt')
                     os.remove('err.txt')
                     a.status = "Wrong Answer"
-                    a.extime += .5
+                    a.extime += .2
                     a.save()
                     a.prob.details.total += 1
                     a.prob.details.wa += 1
@@ -103,7 +103,7 @@ while True:
                 a.prob.details.acc += 1
                 a.prob.details.accuracy = round(float(a.prob.details.acc)/a.prob.details.total,3)
                 a.prob.details.save()
-                print x
+                x = Submission.objects.filter(user = a.user,status = "Accepted",prob=a.prob)
                 if not x:
                     a.user.points += 1
                     a.user.ex_time = time_taken
@@ -124,7 +124,7 @@ while True:
         else:
                 x = Submission.objects.filter(user = a.user,status = "Accepted",prob=a.prob)
                 if not x:
-                    a.user.ex_time += .5
+                    a.user.ex_time += .2
                     a.user.save()
                 continue
        

@@ -21,7 +21,7 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'judge.settings'
 from problems.models import Submission
 
 while True:
-    sub_list = Submission.objects.filter(status='waiting',language='py')
+    sub_list = Submission.objects.filter(status='waiting',language='c')
     if not sub_list:
         time.sleep(1)
         continue
@@ -30,8 +30,31 @@ while True:
 	a.status = 'Processing'
 	a.save()
 
-	code_file = sub_files+ str(a.sid)+'.py'
-	cmd = 'python ' + code_file
+	code_file = sub_files+ str(a.sid)+'.c'
+	cmd = 'cc ' + code_file
+        outf = open('out.txt','w+')
+	pr = subprocess.Popen([cmd],stdin=None,stdout=outf,stderr=outf,shell=True)
+        while pr.poll() is None:
+            continue
+        out = outf.read()
+        
+        os.remove('out.txt')
+        if pr.returncode:
+                 a.status = "Compilation Error"
+                 a.extime = .2
+                 a.save()
+                 a.prob.details.total += 1
+                 a.prob.details.ce += 1
+	         a.prob.details.accuracy = round(float(a.prob.details.acc)/a.prob.details.total,3)
+                 a.prob.details.save()
+                 x = Submission.objects.filter(user = a.user,status = "Accepted",prob=a.prob)
+                 a.user.tot_sub += 1
+                 a.user.save()
+                 if not x:
+                    a.user.ex_time += .2
+                    a.user.save()
+                 continue
+                    
         i = 0
         while i < a.prob.testfiles:
                 i += 1
@@ -39,7 +62,7 @@ while True:
 		inf = open(in_file,'r')
 		outf = open('out.txt','w+')
 		errf = open('err.txt','w+')
-		p = subprocess.Popen([cmd],stdin=inf,stdout=outf,stderr=errf,shell=True)
+		p = subprocess.Popen(['./a.out'],stdin=inf,stdout=outf,stderr=errf,shell=True)
                 time_taken = 0.0
        	        while p.poll() is None:
 		    time.sleep(0.01)
@@ -85,6 +108,7 @@ while True:
                     os.remove('err.txt')
                     continue
                 else:
+                    print outf.read()
                     os.remove('out.txt')
                     os.remove('err.txt')
                     a.status = "Wrong Answer"

@@ -60,8 +60,8 @@ def login_view(request):
                     return render(request,'register.html',{'sub':sub,'url':url,'form':LoginForm(),'text':text})
 
                 login(request,user)
-                user.is_loggedin = True
-                user.save()
+                u.is_loggedin = True
+                u.save()
                 return HttpResponseRedirect('/')
             else:
                 text='Email and password do not match'

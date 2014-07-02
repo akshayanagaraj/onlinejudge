@@ -63,6 +63,7 @@ def substatus(request,sid):
         return HttpResponseRedirect('/problems')
     da = {
             'status':s.status,
+            'errorcode':s.errorcode,
             }
     da = json.dumps(da)
     return HttpResponse(da)

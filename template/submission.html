@@ -10,17 +10,16 @@ window.onload = function(){
 url: "/submissionstatus/{{ s.sid }}", 
 success: function(data) {
 	var parseData = JSON.parse(data);
-	console.log(parseData);
+	console.log(parseData.errorcode);
 	$('#status').html(parseData.status);
+	$('#errorcode').html(parseData.errorcode);
 },
 complete: function() {
 var data = document.getElementById('status').innerHTML;
-console.log(data);
 // schedule the next request *only* when the current one is complete:
 if(data == 'waiting' || data=='Processing')
 {
 
-console.log('Hello');
 setTimeout(myPeriodicMethod, 1000);
 }
 else
@@ -41,6 +40,7 @@ setTimeout(myPeriodicMethod, 1000);
 </div>
 
 <p align="center" id="status">{{ s.status }}</p>
+<p align="center" id="errorcode">{{ s.errorcode }}</p>
 <form action = "/submit/" method="post">
 	{% csrf_token %}
 	<input type="text" name="problemid" value="{{ s.prob.pid }}"><br><br>

@@ -63,6 +63,9 @@ while True:
 	        if a.status == "Time Limit Exceeded":
 	            break
 	        if p.returncode:
+                    outf.close()
+                    outf = open('err.txt','r')
+                    a.errorcode = outf.read()
 		    a.status = "Run Time Error"
                     a.extime += .2
 		    a.save()
@@ -103,7 +106,8 @@ while True:
                 a.prob.details.acc += 1
                 a.prob.details.accuracy = round(float(a.prob.details.acc)/a.prob.details.total,3)
                 a.prob.details.save()
-                x = Submission.objects.filter(user = a.user,status = "Accepted",prob=a.prob)
+                x = Submission.objects.filter(user = a.user,status = "Accepted",prob=a.prob).order_by('extime')
+
                 if not x:
                     print "Adding points"
                     a.user.points += 1
@@ -111,8 +115,9 @@ while True:
                     ac_flag = 1
                 else:
                     x = x[0]
-                    a.user.ex_time -= max(x.extime,time_taken)
-                    a.user.ex_time += min(x.extime,time_taken)
+                    if x.extime > time_taken:
+                        a.user.ex_time -= x.extime
+                        a.user.ex_time += time_taken
 
                 a.user.tot_sub += 1
                 a.user.succ_sub += 1

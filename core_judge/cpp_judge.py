@@ -21,7 +21,7 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'judge.settings'
 from problems.models import Submission
 
 while True:
-    sub_list = Submission.objects.filter(status='waiting',language='c')
+    sub_list = Submission.objects.filter(status='waiting',language='cpp')
     if not sub_list:
         time.sleep(1)
         continue
@@ -30,8 +30,8 @@ while True:
 	a.status = 'Processing'
 	a.save()
 
-	code_file = sub_files+ str(a.sid)+'.c'
-	cmd = 'cc ' + code_file
+	code_file = sub_files+ str(a.sid)+'.cpp'
+	cmd = 'g++ -o output ' + code_file 
         outf = open('out.txt','w+')
 	pr = subprocess.Popen([cmd],stdin=None,stdout=outf,stderr=outf,shell=True)
         while pr.poll() is None:
@@ -39,8 +39,7 @@ while True:
         outf.close()
         outf = open('out.txt','r')
         out = outf.read()
-        a.errorcode = out
-        a.save()
+        print out
         
         os.remove('out.txt')
         if pr.returncode:
@@ -66,7 +65,7 @@ while True:
 		inf = open(in_file,'r')
 		outf = open('out.txt','w+')
 		errf = open('err.txt','w+')
-		p = subprocess.Popen(['./a.out'],stdin=inf,stdout=outf,stderr=errf,shell=True)
+		p = subprocess.Popen(['./output'],stdin=inf,stdout=outf,stderr=errf,shell=True)
                 time_taken = 0.0
        	        while p.poll() is None:
 		    time.sleep(0.01)
@@ -142,7 +141,7 @@ while True:
                 else:
                     x = x[0]
                     if x.extime > time_taken:
-                        a.user.ex_time -= x.extime
+                        a.user.ex_time -= x.extime,time_taken
                         a.user.ex_time += time_taken
 
                 a.user.tot_sub += 1

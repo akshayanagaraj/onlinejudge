@@ -40,6 +40,7 @@ class Submission(models.Model):
 	status = models.CharField(max_length=20,default="waiting")
 	extime = models.FloatField(default=0)
 	user = models.ForeignKey(OjUser)
+        errorcode = models.TextField(max_length=1000)
 	
 	
 

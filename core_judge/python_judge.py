@@ -66,6 +66,7 @@ while True:
                     outf.close()
                     outf = open('err.txt','r')
                     a.errorcode = outf.read()
+                    a.errorcode = a.errorcode.replace(code_file,'')
 		    a.status = "Run Time Error"
                     a.extime += .2
 		    a.save()

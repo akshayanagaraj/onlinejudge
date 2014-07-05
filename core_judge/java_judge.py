@@ -21,7 +21,7 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'judge.settings'
 from problems.models import Submission
 
 while True:
-    sub_list = Submission.objects.filter(status='waiting',language='cpp')
+    sub_list = Submission.objects.filter(status='waiting',language='java')
     if not sub_list:
         time.sleep(1)
         continue
@@ -30,8 +30,8 @@ while True:
 	a.status = 'Processing'
 	a.save()
 
-	code_file = sub_files+ str(a.sid)+'.cpp'
-	cmd = 'g++ -o output ' + code_file 
+	code_file = sub_files+ str(a.sid)+'.java'
+	cmd = 'javac ' + code_file 
         outf = open('out.txt','w+')
 	pr = subprocess.Popen([cmd],stdin=None,stdout=outf,stderr=outf,shell=True)
         while pr.poll() is None:
@@ -40,7 +40,6 @@ while True:
         outf = open('out.txt','r')
         out = outf.read()
         a.errorcode = out.replace(code_file,'')
-        a.save()
         
         os.remove('out.txt')
         if pr.returncode:
@@ -66,7 +65,9 @@ while True:
 		inf = open(in_file,'r')
 		outf = open('out.txt','w+')
 		errf = open('err.txt','w+')
-		p = subprocess.Popen(['./output'],stdin=inf,stdout=outf,stderr=errf,shell=True)
+                cmd = 'java -cp '+ sub_files+' Contest'
+                print cmd
+        	p = subprocess.Popen([cmd],stdin=inf,stdout=outf,stderr=errf,shell=True)
                 time_taken = 0.0
        	        while p.poll() is None:
 		    time.sleep(0.01)
@@ -74,6 +75,8 @@ while True:
 		    if time_taken > a.prob.time_limit:
 		    	os.kill(p.pid,signal.SIGKILL)
 			os.waitpid(-1,os.WNOHANG)
+                        outf = open('out.txt','r')
+                        print outf.read()
 			os.remove('out.txt')
                         os.remove('err.txt')
 			a.status = "Time Limit Exceeded"
@@ -92,8 +95,7 @@ while True:
 	        if p.returncode:
                     outf.close()
                     outf = open('err.txt','r')
-                    a.errorcode = outf.read()
-                    a.errorcode = a.errorcode.replace(code_file,'')
+                    a.errorcode = outf.read().replace(code_file,'')
 		    a.status = "Run Time Error"
                     a.extime += .2
 		    a.save()

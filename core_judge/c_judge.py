@@ -39,7 +39,8 @@ while True:
         outf.close()
         outf = open('out.txt','r')
         out = outf.read()
-        a.errorcode = out
+        a.errorcode = out.replace(code_file,'')
+        
         a.save()
         
         os.remove('out.txt')
@@ -93,6 +94,7 @@ while True:
                     outf.close()
                     outf = open('err.txt','r')
                     a.errorcode = outf.read()
+                    a.errorcode = a.errorcode.replace(code_file,'')
 		    a.status = "Run Time Error"
                     a.extime += .2
 		    a.save()

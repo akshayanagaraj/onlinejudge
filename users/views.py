@@ -83,8 +83,7 @@ def logoff(request):
 @login_required(login_url='/login/')
 def profile(request):
 	u = OjUser.objects.get(username = request.user.username)
-	x = LendBook.objects.filter(sub=u,is_returned=False)
-	return render(request,'profile.html',{'u':u,'x':x})
+	return render(request,'profile.html',{'u':u,})
 
 @login_required(login_url='/login/')
 def edit_profile(request):

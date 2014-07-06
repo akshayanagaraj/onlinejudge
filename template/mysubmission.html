@@ -1,0 +1,24 @@
+{% include "htmltop.html" %}
+	
+<table border="1" class="center">
+	<tr>
+		<th>Sub Id</th>
+		<th>Problem</th>
+		<th>Language</th>
+		<th>Status</th>
+		<th>Time</th>
+	
+	</tr>
+	{% for i in s %}
+	<tr>
+		<td>{{ i.sid }}</td>
+		<td><a href="/submissions/{{ i.sid }}/">{{ i.prob.name }}</a></td>
+		<td>{{ i.language | title}}</td>
+		<td>{{ i.status}}</td>
+		<td>{{ i.extime}}</td>
+	</tr>
+	
+	{% endfor %}
+</table>
+{% include "htmlbottom.html" %}
+

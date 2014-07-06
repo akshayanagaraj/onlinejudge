@@ -68,6 +68,13 @@ def substatus(request,sid):
     da = json.dumps(da)
     return HttpResponse(da)
 
+@login_required(login_url='/login')
+def submissions(request):
+    u = OjUser.objects.get(username=request.user.username)
+    s = Submission.objects.filter(user=u)
+    return render(request,'mysubmission.html',{'s':s})
+
+
 
     
     

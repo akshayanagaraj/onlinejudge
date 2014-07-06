@@ -40,7 +40,7 @@ th {
 				<div class="col-md-6"></div>
 				<div class="col-md-6">
 					<br><br>
-					{{ user.username}}
+					<a href="/profile">{{ user.username}}</a>
 
 
 					
@@ -55,6 +55,7 @@ th {
 			{% if user.is_authenticated %}
 			<li><a href="/problems">Problems</a></li>
 			<li><a href="/leaderboard">Ranks</a></li>
+			<li><a href="/submissions">My Submissions</a></li>
 			<li><a href="/logout">Logout</a></li>
 			{% else %}
 			<li><a href="/register">Register</a></li>

@@ -7,7 +7,7 @@ import filecmp
 
 
 
-base_dir = '/home/aswin/Documents/Aptana/judge'
+base_dir = '/home/aswin/python/judge'
 media_dir = base_dir + '/media'
 
 sub_files = media_dir + '/submissions/'

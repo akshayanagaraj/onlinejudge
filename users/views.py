@@ -55,9 +55,9 @@ def login_view(request):
             )
             if user is not None and user.is_active:
                 u = OjUser.objects.get(username=user.username)
-                if u.is_loggedin:
+                """     if u.is_loggedin:
                     text = 'This user is already logged in'
-                    return render(request,'register.html',{'sub':sub,'url':url,'form':LoginForm(),'text':text})
+                    return render(request,'register.html',{'sub':sub,'url':url,'form':LoginForm(),'text':text})"""
 
                 login(request,user)
                 u.is_loggedin = True

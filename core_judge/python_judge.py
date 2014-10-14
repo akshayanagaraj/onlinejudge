@@ -2,12 +2,14 @@ import os, subprocess, datetime, time
 import signal
 import sys
 import filecmp
+import django
+
+from RestrictedPython.Guards import safe_builtins
 
 
 
 
-
-base_dir = '/home/aswin/Documents/Aptana/judge'
+base_dir = '/home/aswin/python/judge'
 media_dir = base_dir + '/media'
 
 sub_files = media_dir + '/submissions/'
@@ -16,6 +18,8 @@ out_files = media_dir + '/outfiles/'
 
 sys.path.append(base_dir)
 os.environ['DJANGO_SETTINGS_MODULE'] = 'judge.settings'
+
+django.setup()
 
 
 from problems.models import Submission
@@ -31,6 +35,7 @@ while True:
 	a.save()
 
 	code_file = sub_files+ str(a.sid)+'.py'
+        code = open(code_file,'r')
 	cmd = 'python ' + code_file
         i = 0
         while i < a.prob.testfiles:
@@ -39,6 +44,22 @@ while True:
 		inf = open(in_file,'r')
 		outf = open('out.txt','w+')
 		errf = open('err.txt','w+')
+                x  = code.read()
+                if "import os" in x:
+		    os.remove('out.txt')
+                    os.remove('err.txt')
+                    a.status = "Wrong Answer"
+                    a.extime += .2
+                    a.save()
+                    a.prob.details.total += 1
+                    a.prob.details.wa += 1
+                    a.prob.details.accuracy = round(float(a.prob.details.acc)/a.prob.details.total,3)
+                    a.prob.details.save()
+                    a.user.tot_sub += 1
+                    a.user.save()
+                    break
+                    
+
 		p = subprocess.Popen([cmd],stdin=inf,stdout=outf,stderr=errf,shell=True)
                 time_taken = 0.0
        	        while p.poll() is None:
@@ -66,7 +87,7 @@ while True:
                     outf.close()
                     outf = open('err.txt','r')
                     a.errorcode = outf.read()
-                    a.errorcode = a.errorcode.replace(code_file,'')
+                    a.errorcode = a.errorcode#.replace(code_file,'')
 		    a.status = "Run Time Error"
                     a.extime += .2
 		    a.save()

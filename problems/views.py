@@ -34,9 +34,10 @@ def submission(request):
                                       language=request.POST['language'],
                                       subtime = datetime.datetime.now(),
                                       )
-        s.save()
+
         filename = str(s.sid)+'.'+s.language
         s.code.save(filename,ContentFile(request.POST['code']))
+        s.save()
         return HttpResponseRedirect('/submissions/'+str(s.sid))
     else:
         return render(request,'submit.html')

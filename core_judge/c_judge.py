@@ -3,7 +3,7 @@ import signal
 import sys
 import filecmp
 
-
+import django
 
 
 
@@ -17,6 +17,7 @@ out_files = media_dir + '/outfiles/'
 sys.path.append(base_dir)
 os.environ['DJANGO_SETTINGS_MODULE'] = 'judge.settings'
 
+django.setup()
 
 from problems.models import Submission
 
@@ -32,7 +33,20 @@ while True:
 
 	code_file = sub_files+ str(a.sid)+'.c'
 	cmd = 'cc ' + code_file
-        outf = open('out.txt','w+')
+        outf= open('out.txt','w+')
+        code = open(code_file,'r').read()
+        if "system" in code:
+            os.remove('out.txt')
+            a.status = "Wrong Answer"
+            a.extime += .2
+            a.save()
+            a.prob.details.total += 1
+            a.prob.details.wa += 1
+            a.prob.details.accuracy = round(float(a.prob.details.acc)/a.prob.details.total,3)
+            a.prob.details.save()
+            a.user.tot_sub += 1
+            a.user.save()
+            break
 	pr = subprocess.Popen([cmd],stdin=None,stdout=outf,stderr=outf,shell=True)
         while pr.poll() is None:
             continue
@@ -117,7 +131,6 @@ while True:
                     os.remove('err.txt')
                     continue
                 else:
-                    print outf.read()
                     os.remove('out.txt')
                     os.remove('err.txt')
                     a.status = "Wrong Answer"

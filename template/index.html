@@ -1,10 +1,19 @@
 {% include "htmltop.html" %}
 <div align="center">
 {% if not user.is_authenticated %}
-	<h3>Let me Judge You
+<h3 >Please Login to Continue</h3>
 {% else %}
 <h3>Welcome {{ user.first_name }}</h3>
 {% endif %}
+</div>
+<div style="font-size:17px;margin-top:20px;">
+	<div class="col-md-3"></div>
+	<div class="col-md-9">
+		<i class="fa fa-arrow-right"></i>	This contest  is a normal ICPC style contest with 5 problems.<br><br>
+		<i class="fa fa-arrow-right"></i> Solving each question gives you a single point<br><br>
+		<i class="fa fa-arrow-right"></i> Copying code is strictly prohibited!!<br><br>
+		<i class="fa fa-arrow-right"></i> Once logged in, you cannot logout and the same account can be logged in only at one system at a time.
+</div>
 </div>
 </body>
 </html>

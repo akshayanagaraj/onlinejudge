@@ -2,6 +2,7 @@ import os, subprocess, datetime, time
 import signal
 import sys
 import filecmp
+import django
 
 
 
@@ -18,6 +19,7 @@ sys.path.append(base_dir)
 os.environ['DJANGO_SETTINGS_MODULE'] = 'judge.settings'
 
 
+django.setup()
 from problems.models import Submission
 
 while True:
@@ -31,6 +33,7 @@ while True:
 	a.save()
 
 	code_file = sub_files+ str(a.sid)+'.rb'
+        
 	cmd = 'ruby ' + code_file
         i = 0
         while i < a.prob.testfiles:
@@ -39,6 +42,19 @@ while True:
 		inf = open(in_file,'r')
 		outf = open('out.txt','w+')
 		errf = open('err.txt','w+')
+                if "system" in open(code_file,'r').read():
+                    os.remove('out.txt')
+                    os.remove('err.txt')
+                    a.status = "Wrong Answer"
+                    a.extime += .2
+                    a.save()
+                    a.prob.details.total += 1
+                    a.prob.details.wa += 1
+                    a.prob.details.accuracy = round(float(a.prob.details.acc)/a.prob.details.total,3)
+                    a.prob.details.save()
+                    a.user.tot_sub += 1
+                    a.user.save()
+                    break
 		p = subprocess.Popen([cmd],stdin=inf,stdout=outf,stderr=errf,shell=True)
                 time_taken = 0.0
        	        while p.poll() is None:
@@ -114,9 +130,9 @@ while True:
                     ac_flag = 1
                 else:
                     x = x[0]
-                    if x.extime > time_taken
-                    a.user.ex_time -= x.extime
-                    a.user.ex_time += time_taken
+                    if x.extime > time_taken:
+                        a.user.ex_time -= x.extime
+                        a.user.ex_time += time_taken
 
                 a.user.tot_sub += 1
                 a.user.succ_sub += 1

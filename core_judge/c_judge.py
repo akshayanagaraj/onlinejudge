@@ -7,7 +7,7 @@ import django
 
 
 
-base_dir = '/home/aswin/python/judge'
+base_dir = '/home/aswin/python/judge_site/judge'
 media_dir = base_dir + '/media'
 
 sub_files = media_dir + '/submissions/'
@@ -28,15 +28,16 @@ while True:
         continue
 
     for a in sub_list: 
+        print a.sid
 	a.status = 'Processing'
 	a.save()
 
 	code_file = sub_files+ str(a.sid)+'.c'
 	cmd = 'cc ' + code_file
-        outf= open('out.txt','w+')
+        outf= open('cout.txt','w+')
         code = open(code_file,'r').read()
         if "system" in code:
-            os.remove('out.txt')
+            os.remove('cout.txt')
             a.status = "Wrong Answer"
             a.extime += .2
             a.save()
@@ -51,13 +52,13 @@ while True:
         while pr.poll() is None:
             continue
         outf.close()
-        outf = open('out.txt','r')
+        outf = open('cout.txt','r')
         out = outf.read()
         a.errorcode = out.replace(code_file,'')
         
         a.save()
         
-        os.remove('out.txt')
+        os.remove('cout.txt')
         if pr.returncode:
                  a.status = "Compilation Error"
                  a.extime = .2
@@ -76,11 +77,12 @@ while True:
                     
         i = 0
         while i < a.prob.testfiles:
+                print i
                 i += 1
 		in_file = in_files + a.prob.pid + str(i) + '.txt'
 		inf = open(in_file,'r')
-		outf = open('out.txt','w+')
-		errf = open('err.txt','w+')
+		outf = open('cout.txt','w+')
+		errf = open('cerr.txt','w+')
 		p = subprocess.Popen(['./a.out'],stdin=inf,stdout=outf,stderr=errf,shell=True)
                 time_taken = 0.0
        	        while p.poll() is None:
@@ -89,8 +91,8 @@ while True:
 		    if time_taken > a.prob.time_limit:
 		    	os.kill(p.pid,signal.SIGKILL)
 			os.waitpid(-1,os.WNOHANG)
-			os.remove('out.txt')
-                        os.remove('err.txt')
+			os.remove('cout.txt')
+                        os.remove('cerr.txt')
 			a.status = "Time Limit Exceeded"
                         a.extime += .2
 			a.save()
@@ -106,7 +108,7 @@ while True:
 	            break
 	        if p.returncode:
                     outf.close()
-                    outf = open('err.txt','r')
+                    outf = open('cerr.txt','r')
                     a.errorcode = outf.read()
                     a.errorcode = a.errorcode.replace(code_file,'')
 		    a.status = "Run Time Error"
@@ -118,21 +120,23 @@ while True:
 		    a.prob.details.save()
 		    a.user.tot_sub += 1
 		    a.user.save()
-                    os.remove('out.txt')
-                    os.remove('err.txt')
+                    os.remove('cout.txt')
+                    os.remove('cerr.txt')
                     break
 	        out_file = out_files + a.prob.pid + str(i) + '.txt'
                 out_file_p = open(out_file,'r')
                 out_template = out_file_p.read()
-                sub_out = open('out.txt','r').read()
+                sub_out = open('cout.txt','r').read()
+                print out_template
+                print sub_out
                 if out_template == sub_out :
 
-                    os.remove('out.txt')
-                    os.remove('err.txt')
+                    os.remove('cout.txt')
+                    os.remove('cerr.txt')
                     continue
                 else:
-                    os.remove('out.txt')
-                    os.remove('err.txt')
+                    os.remove('cout.txt')
+                    os.remove('cerr.txt')
                     a.status = "Wrong Answer"
                     a.extime += .2
                     a.save()
@@ -144,7 +148,7 @@ while True:
                     a.user.save()
                     break
         ac_flag = 0
-        if i == a.prob.testfiles:
+        if a.status == "Processing":
                 a.prob.details.total += 1
                 a.prob.details.acc += 1
                 a.prob.details.accuracy = round(float(a.prob.details.acc)/a.prob.details.total,3)

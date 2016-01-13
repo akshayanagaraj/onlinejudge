@@ -27,6 +27,7 @@ class Problem(models.Model):
 	details = models.ForeignKey(Detail)
 	testfiles = models.IntegerField(default=0)
 	time_limit = models.FloatField(default=0)
+        created_by = models.ForeignKey(OjUser,blank=True,null=True)
 	
 
 class Submission(models.Model):

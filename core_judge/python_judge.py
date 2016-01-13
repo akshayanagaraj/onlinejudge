@@ -9,7 +9,7 @@ from RestrictedPython.Guards import safe_builtins
 
 
 
-base_dir = '/home/aswin/python/judge'
+base_dir = '/home/aswin/python/judge_site/judge'
 media_dir = base_dir + '/media'
 
 sub_files = media_dir + '/submissions/'
@@ -42,11 +42,11 @@ while True:
                 i += 1
 		in_file = in_files + a.prob.pid + str(i) + '.txt'
 		inf = open(in_file,'r')
-		outf = open('out.txt','w+')
+		outf = open('pout.txt','w+')
 		errf = open('err.txt','w+')
                 x  = code.read()
                 if "import os" in x:
-		    os.remove('out.txt')
+		    os.remove('pout.txt')
                     os.remove('err.txt')
                     a.status = "Wrong Answer"
                     a.extime += .2
@@ -68,7 +68,7 @@ while True:
 		    if time_taken > a.prob.time_limit:
 		    	os.kill(p.pid,signal.SIGKILL)
 			os.waitpid(-1,os.WNOHANG)
-			os.remove('out.txt')
+			os.remove('pout.txt')
                         os.remove('err.txt')
 			a.status = "Time Limit Exceeded"
                         a.extime += .2
@@ -87,7 +87,7 @@ while True:
                     outf.close()
                     outf = open('err.txt','r')
                     a.errorcode = outf.read()
-                    a.errorcode = a.errorcode#.replace(code_file,'')
+                    a.errorcode = a.errorcode.replace(code_file,'')
 		    a.status = "Run Time Error"
                     a.extime += .2
 		    a.save()
@@ -97,20 +97,20 @@ while True:
 		    a.prob.details.save()
 		    a.user.tot_sub += 1
 		    a.user.save()
-                    os.remove('out.txt')
+                    os.remove('pout.txt')
                     os.remove('err.txt')
                     break
 	        out_file = out_files + a.prob.pid + str(i) + '.txt'
                 out_file_p = open(out_file,'r')
                 out_template = out_file_p.read()
-                sub_out = open('out.txt','r').read()
+                sub_out = open('pout.txt','r').read()
                 if out_template == sub_out :
 
-                    os.remove('out.txt')
+                    os.remove('pout.txt')
                     os.remove('err.txt')
                     continue
                 else:
-                    os.remove('out.txt')
+                    os.remove('pout.txt')
                     os.remove('err.txt')
                     a.status = "Wrong Answer"
                     a.extime += .2

@@ -8,7 +8,7 @@ import django
 
 
 
-base_dir = '/home/aswin/python/judge'
+base_dir = '/home/aswin/python/judge_site/judge'
 media_dir = base_dir + '/media'
 
 sub_files = media_dir + '/submissions/'

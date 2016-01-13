@@ -8,7 +8,7 @@ import django
 
 
 
-base_dir = '/home/aswin/python/judge'
+base_dir = '/home/aswin/python/judge_site/judge'
 media_dir = base_dir + '/media'
 
 sub_files = media_dir + '/submissions/'
@@ -34,9 +34,9 @@ while True:
 
 	code_file = sub_files+ str(a.sid)+'.java'
 	cmd = 'javac ' + code_file 
-        outf= open('out.txt','w+')
+        outf= open('jout.txt','w+')
         if "exec" in open(code_file,'r').read():
-            os.remove('out.txt')
+            os.remove('jout.txt')
             os.remove('err.txt')
             a.status = "Wrong Answer"
             a.extime += .2
@@ -52,11 +52,11 @@ while True:
         while pr.poll() is None:
             continue
         outf.close()
-        outf = open('out.txt','r')
+        outf = open('jout.txt','r')
         out = outf.read()
         a.errorcode = out.replace(code_file,'')
         
-        os.remove('out.txt')
+        os.remove('jout.txt')
         if pr.returncode:
                  a.status = "Compilation Error"
                  a.extime = .2
@@ -78,7 +78,7 @@ while True:
                 i += 1
 		in_file = in_files + a.prob.pid + str(i) + '.txt'
 		inf = open(in_file,'r')
-		outf = open('out.txt','w+')
+		outf = open('jout.txt','w+')
 		errf = open('err.txt','w+')
                 cmd = 'java -cp '+ sub_files+' Solution'
         	p = subprocess.Popen([cmd],stdin=inf,stdout=outf,stderr=errf,shell=True)
@@ -89,8 +89,8 @@ while True:
 		    if time_taken > a.prob.time_limit:
 		    	os.kill(p.pid,signal.SIGKILL)
 			os.waitpid(-1,os.WNOHANG)
-                        outf = open('out.txt','r')
-			os.remove('out.txt')
+                        outf = open('jout.txt','r')
+			os.remove('jout.txt')
                         os.remove('err.txt')
 			a.status = "Time Limit Exceeded"
                         a.extime += .2
@@ -118,20 +118,20 @@ while True:
 		    a.prob.details.save()
 		    a.user.tot_sub += 1
 		    a.user.save()
-                    os.remove('out.txt')
+                    os.remove('jout.txt')
                     os.remove('err.txt')
                     break
 	        out_file = out_files + a.prob.pid + str(i) + '.txt'
                 out_file_p = open(out_file,'r')
                 out_template = out_file_p.read()
-                sub_out = open('out.txt','r').read()
+                sub_out = open('jout.txt','r').read()
                 if out_template == sub_out :
 
-                    os.remove('out.txt')
+                    os.remove('jout.txt')
                     os.remove('err.txt')
                     continue
                 else:
-                    os.remove('out.txt')
+                    os.remove('jout.txt')
                     os.remove('err.txt')
                     a.status = "Wrong Answer"
                     a.extime += .2

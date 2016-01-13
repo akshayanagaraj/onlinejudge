@@ -11,6 +11,7 @@ import json
 
 def problems(request):
     p = Problem.objects.filter(is_active=True)
+    u = None
     return render(request,'problems.html',{'p':p})
 
 def problem(request,pid):
@@ -74,6 +75,13 @@ def submissions(request):
     u = OjUser.objects.get(username=request.user.username)
     s = Submission.objects.filter(user=u)
     return render(request,'mysubmission.html',{'s':s})
+
+
+def editproblem(request,pid):
+    prob = Problem.objects.filter(pid=pid).first()
+    if not prob:
+        return HttpResponseRedirect("/problems")
+    return HttpResponseRedirect("/problems/"+pid)
 
 
 

@@ -10,6 +10,7 @@ class OjUser(User):
         rank = models.IntegerField(default=1)
         is_loggedin = models.BooleanField(default=False)
         ex_time = models.FloatField(default=0.0)
+        is_creator = models.BooleanField(default=False)
 	
 
 

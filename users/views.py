@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import login,logout,authenticate
 from users.models import OjUser
+from problems.models import Submission
 from users.forms import RegisterForm, LoginForm,ProfileForm
 from django.contrib.auth.decorators import login_required
 
@@ -55,9 +56,9 @@ def login_view(request):
             )
             if user is not None and user.is_active:
                 u = OjUser.objects.get(username=user.username)
-                """     if u.is_loggedin:
+                if u.is_loggedin:
                     text = 'This user is already logged in'
-                    return render(request,'register.html',{'sub':sub,'url':url,'form':LoginForm(),'text':text})"""
+                    return render(request,'register.html',{'sub':sub,'url':url,'form':LoginForm(),'text':text})
 
                 login(request,user)
                 u.is_loggedin = True
@@ -71,19 +72,23 @@ def login_view(request):
             return render(request,'register.html',{'url':url,'form':form,'sub':sub})
     else:
 		   return render(request,'register.html',{'url':url,'form':LoginForm(),'sub':sub})
-                
+        
+@login_required(login_url='/login')
 def logoff(request):
-        u = OjUser.objects.get(username = request.user.username)
+        """u = OjUser.objects.get(username = request.user.username)
         u.is_loggedin = False
         u.save()
 	logout(request)
 
-	return HttpResponseRedirect('/')
+	return HttpResponseRedirect('/')"""
+        return render(request,"index.html",{"text":"Sorry. You cannot logout."})
+        
 
 @login_required(login_url='/login/')
 def profile(request):
 	u = OjUser.objects.get(username = request.user.username)
-	return render(request,'profile.html',{'u':u,})
+        s = Submission.objects.filter(user=u)
+        return render(request,'profile.html',{'u':u,'s':s})
 
 @login_required(login_url='/login/')
 def edit_profile(request):

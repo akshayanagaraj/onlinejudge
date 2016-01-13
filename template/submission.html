@@ -1,6 +1,8 @@
 {% include "htmltop.html" %}
 <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>-->
 <script src="/static/js/jquery1-11-1.js"></script>
+<script src="/static/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="/static/js/classie.js"></script>
 <script type="text/javascript">
 window.onload = function(){
 	document.getElementById("language_field").value="{{ s.language }}";
@@ -13,38 +15,78 @@ success: function(data) {
 	console.log(parseData.errorcode);
 	$('#status').html(parseData.status);
 	$('#errorcode').html(parseData.errorcode);
+	if(parseData.errorcode){
+		$('#statusdiv').height(100);
+	}
 },
 complete: function() {
 var data = document.getElementById('status').innerHTML;
 // schedule the next request *only* when the current one is complete:
-if(data == 'waiting' || data=='Processing')
-{
-
-setTimeout(myPeriodicMethod, 1000);
-}
-else
-{
-}
+	var status_div = $('#statusdiv');
+	console.log(status_div);
+	if(data=="waiting" || data == "Processing"){
+	setTimeout(myPeriodicMethod, 1000);
+	}
+	else if(data == "Accepted"){
+	status_div.removeClass("alert-info").addClass("alert-success");
+	}
+	else{
+	status_div.removeClass("alert-info").addClass("alert-danger");
+	}
 
 }
 });
 }
 
+	var data = document.getElementById('status').innerHTML;
+	var status_div =$('#statusdiv');
+	console.log(status_div);
+	var errorcode = document.getElementById("errorcode").innerHTML;
+	if(errorcode){
+		$('#statusdiv').height(100);
+	}
+
+	if(data=="waiting" || data == "processing"){
+	setTimeout(myPeriodicMethod, 1000);
+	}
+	else if(data == "Accepted"){
+	status_div.removeClass("alert-info").addClass("alert-success");
+	}
+	else{
+	status_div.removeClass("alert-info").addClass("alert-danger");
+	}
 // schedule the first invocation:
 setTimeout(myPeriodicMethod, 1000);
 
+var editor = ace.edit("editor");
+//editor.getSession().setValue("");
+editor.setTheme("ace/theme/dawn");
+editor.getSession().setMode("ace/mode/javascript");
+editor.getSession().setUseWorker(false);
 
 }
 </script>
-<div align="center" id="imagediv">
-</div>
+<script>
 
+function submit_form(){
+var editor = ace.edit("editor");
+        $("#code").val(editor.getSession().getValue());
+	return true;
+}
+</script>
+
+<div class="status alert alert-info" id="statusdiv">
 <p align="center" id="status">{{ s.status }}</p>
-<p align="center" id="errorcode">{{ s.errorcode }}</p>
-<form action = "/submit/" method="post">
+<p align="center" id="errorcode">{{ s.errorcode }}</p><br><br>
+</div>
+<center>
+<form action = "/submit/" method="post" onclick="return submit_form()">
 	{% csrf_token %}
-	<input type="text" name="problemid" value="{{ s.prob.pid }}"><br><br>
-	<textarea rows="30" cols="80" name="code">{{ code }}</textarea><br><br>
+	<textarea id="code" name="code" style="visibility:hidden;"></textarea><br><br>
+	<pre id="editor">
+	{{ code }}
+	</pre>
+	<input type="text" name="problemid" value="{{ s.prob.pid }}">
 	<select name="language" id = "language_field">
 		<option value="c">C</option>
 		<option value="cpp">C++</option>
@@ -57,5 +99,8 @@ setTimeout(myPeriodicMethod, 1000);
 
 
 </form>
+</center>
+
+
 
 {% include "htmlbottom.html" %}

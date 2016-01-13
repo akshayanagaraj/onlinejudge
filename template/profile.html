@@ -1,5 +1,5 @@
 {% include "htmltop.html" %}
-<div align="center">
+<div align="center" style="margin-bottom:30px;">
 	NAME: {{ u.first_name }}<br>
 	GENDER: {{ u.gender }}<br>
 	REG NO : {{ u.reg_no }}<br>
@@ -7,6 +7,24 @@
 	POINTS: {{ u.points}}<br>
 	TOTAL SUBMISSIONS: {{ u.tot_sub}}<br>
 	<a href="/editprofile">Edit Profile</a>
-	</div>
+</div>
+<table class="table center">
+	<tr class="t_header">
+		<th>Sub ID</th>
+		<th>Problem</th>
+		<th>Language</th>
+		<th>Status</th>
+		<th>Time</th>
+	</tr>
+	{% for i in s %}
+	<tr>
+		<td>{{ i.sid }}</td>
+		<td><a href="/problems/{{ i.prob.pid }}">{{ i.prob.name }}</a></td>
+		<td>{{ i.language}}</td>
+		<td>{{ i.status }}</td>
+		<td>{{i.extime}}</td>
+	</tr>
+	{% endfor %}
+</table>
 </body>
 <html>
